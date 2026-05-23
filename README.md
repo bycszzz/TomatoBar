@@ -1,56 +1,47 @@
 <p align="center">
 <img src="https://raw.githubusercontent.com/ivoronin/TomatoBar/main/TomatoBar/Assets.xcassets/AppIcon.appiconset/icon_128x128%402x.png" width="128" height="128"/>
-<p>
- 
-<h1 align="center">TomatoBar fork</h1>
-<p align="center">
-<img src="https://img.shields.io/github/actions/workflow/status/ivoronin/TomatoBar/main.yml?branch=main"/> <img src="https://img.shields.io/github/downloads/ivoronin/TomatoBar/total"/> <img src="https://img.shields.io/github/v/release/ivoronin/TomatoBar?display_name=tag"/> <img src="https://img.shields.io/homebrew/cask/v/tomatobar"/>
 </p>
 
-<img
-  src="https://github.com/ivoronin/TomatoBar/raw/main/screenshot.png?raw=true"
-  alt="Screenshot"
-  width="50%"
-  align="right"
-/>
+<h1 align="center">TomatoBar — personal fork</h1>
 
-## Overview
-Have you ever heard of Pomodoro? It’s a great technique to help you keep track of time and stay on task during your studies or work. Read more about it on <a href="https://en.wikipedia.org/wiki/Pomodoro_Technique">Wikipedia</a>.
+macOS menu-bar Pomodoro timer with **project tracking**, **focus analytics**, and **per-session notes**.
 
-TomatoBar is world's neatest Pomodoro timer for the macOS menu bar. All the essential features are here - configurable
-work and rest intervals, optional sounds, discreet actionable notifications, global hotkey.
+Forked from [AuroraWright/TomatoBar](https://github.com/AuroraWright/TomatoBar), which in turn forks the original [ivoronin/TomatoBar](https://github.com/ivoronin/TomatoBar). All upstream behavior (Pomodoro cycles, sounds, DND, hotkeys, presets, `tomatobar://` URL scheme) is preserved unchanged.
 
-TomatoBar is fully sandboxed with no entitlements (except for the Apple Events entitlement, used to run the Do Not Disturb toggle shortcut).
+## What this fork adds
 
-## Fork notes
-This fork makes a couple additions/modifications:
+### Project / area tagging
+Pick a project — and optionally a sub-area — from the menu-bar popover before each Pomodoro. Both layers support create / rename / archive / complete / delete.
 
-- Increases the maximum timer duration to 2 hours/120 minutes
-- Adds an option to toggle Do Not Disturb automatically using a shortcut. The first time you start the timer you'll be prompted to add the shortcut, it will work fine afterwards (also PRed to https://github.com/ivoronin/TomatoBar/pull/82)
-- Adds sound customization: to use, open the sound folder from settings and place audio files named "windup", "ding" or "ticking" in mp3 or m4a/mp4 (aac/alac) format
-- Adds a preset selector with 4 presets you can quickly switch between
-- Adds a pause button, keyboard shortcut and URL (based on https://github.com/ivoronin/TomatoBar/pull/52)
-- Adds a skip button, keyboard shortcut and URL which can skip both work and rest (in addition to the existing rest skip notification)
-- Adds an "add a minute" button, keyboard shortcut and URL
-- Extends "stop after break" with "work" and "set" options
-- Adds a "start with break" option
-- Adds a "start timer on launch" option
-- Makes numbers in the settings editable (based on https://github.com/ivoronin/TomatoBar/pull/63)
-- Displays current interval on the start/stop button when "Stop after" is disabled
-- Turns the volume display into a percentage, adds long tap gesture on the percentage to mute/unmute (in addition to the existing double tap reset)
-- Adds an option for a full screen mask (taken from https://github.com/ivoronin/TomatoBar/pull/65)
-- Doesn't play sounds when volume is set to zero (fixes issues with e.g. multipoint bluetooth headphones)
-- Increases the minimum macOS version requirement to Monterey
+### Persistent session log
+Every work and rest interval is stored as a structured record (project, area, planned vs. actual duration, completed flag, notes) in `~/Library/Containers/<bundle-id>/Data/Documents/tracking.json`. A `.bak` snapshot is taken on each launch.
 
-## Integration with other tools
-### Event log
-TomatoBar logs state transitions in JSON format to `~/Library/Containers/com.github.ivoronin.TomatoBar/Data/Library/Caches/TomatoBar.log`. Use this data to analyze your productivity and enrich other data sources.
-### Controlling the timer
-TomatoBar can be controlled using `tomatobar://` URLs. To start or stop the timer from the command line, use `open tomatobar://startStop`. To pause or resume use `open tomatobar://pauseResume`. To skip use `open tomatobar://skip`. To add a minute use `open tomatobar://addMinute`
+### Session notes prompt
+When a Pomodoro ends, a full-screen overlay asks **"刚刚完成了什么？" / "What did you just accomplish?"** and stores the answer on the session. Press <kbd>↵</kbd> to save — the mask auto-dismisses while the rest period continues counting down. Single-click the mask to dismiss without saving; double-click to skip the rest entirely.
 
-## Older versions
-Touch bar integration and older macOS versions (earlier than Big Sur) are supported by TomatoBar versions prior to 3.0
+### Dashboard ( <kbd>⌘D</kbd> )
+- Today / week / month summary cards
+- Weekly daily-focus bar chart, monthly per-project stacked chart
+- GitHub-style 12-month focus heatmap
+- Per-project (or per-area when filtered) breakdown
+- Chronological session log with notes shown as titles
 
-## Licenses
- - Timer sounds are licensed from buddhabeats
- - "macos-focus-mode.shortcut" is taken from the <a href="https://github.com/arodik/macos-focus-mode">macos-focus-mode</a> project under the MIT license.
+### Project retrospective
+Projects marked completed open a detail view: area-distribution pie chart, hour-of-day session histogram, cumulative-focus curve.
+
+## Build
+
+Requires Xcode 15+, macOS 14+.
+
+```bash
+xcodebuild -project TomatoBar.xcodeproj -scheme TomatoBar -configuration Debug build
+```
+
+For free / Personal Team signing (self-use only, provisioning profile expires after 7 days), see [CLAUDE.md](CLAUDE.md) — it documents Bundle ID rename, sandbox container path, and the entitlements needed for the macOS Focus / Do-Not-Disturb integration.
+
+## Credits
+
+- Direct upstream: [AuroraWright/TomatoBar](https://github.com/AuroraWright/TomatoBar)
+- Original: [ivoronin/TomatoBar](https://github.com/ivoronin/TomatoBar)
+- Timer sounds: buddhabeats (licensed)
+- `macos-focus-mode.shortcut` from [arodik/macos-focus-mode](https://github.com/arodik/macos-focus-mode) — MIT
