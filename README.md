@@ -13,8 +13,8 @@ Forked from [AuroraWright/TomatoBar](https://github.com/AuroraWright/TomatoBar),
 ### Project / area tagging
 Pick a project — and optionally a sub-area — from the menu-bar popover before each Pomodoro. Both layers support create / rename / archive / complete / delete.
 
-### Persistent session log
-Every work and rest interval is stored as a structured record (project, area, planned vs. actual duration, completed flag, notes) in `~/Library/Containers/<bundle-id>/Data/Documents/tracking.json`. A `.bak` snapshot is taken on each launch.
+### Persistent session log (iCloud Drive)
+Every work and rest interval is stored as a structured record (project, area, planned vs. actual duration, completed flag, notes) in `~/Library/Mobile Documents/com~apple~CloudDocs/TomatoBar/tracking.json` — i.e. directly inside iCloud Drive, so macOS syncs and backs it up automatically. A `.bak` snapshot is taken on each launch. App sandbox is disabled in this fork (personal-use only); first launch auto-migrates any data from the previous sandbox-container path.
 
 ### Session notes prompt
 When a Pomodoro ends, a full-screen overlay asks **"刚刚完成了什么？" / "What did you just accomplish?"** and stores the answer on the session. Press <kbd>↵</kbd> to save — the mask auto-dismisses while the rest period continues counting down. Single-click the mask to dismiss without saving; double-click to skip the rest entirely.

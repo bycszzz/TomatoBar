@@ -18,10 +18,35 @@ final class TrackingStore: ObservableObject {
     private let bakURL: URL
 
     private init() {
-        let docs = FileManager.default.urls(for: .documentDirectory, in: .userDomainMask)[0]
-        fileURL = docs.appendingPathComponent("tracking.json")
-        bakURL = docs.appendingPathComponent("tracking.json.bak")
+        let storageDir = Self.resolveStorageDirectory()
+        fileURL = storageDir.appendingPathComponent("tracking.json")
+        bakURL = storageDir.appendingPathComponent("tracking.json.bak")
+        Self.migrateLegacyDataIfNeeded(to: fileURL)
         load()
+    }
+
+    /// Prefer iCloud Drive (auto-syncs); fall back to ~/Documents if iCloud Drive unavailable.
+    private static func resolveStorageDirectory() -> URL {
+        let home = NSHomeDirectory()
+        let iCloudDir = URL(fileURLWithPath: home)
+            .appendingPathComponent("Library/Mobile Documents/com~apple~CloudDocs/TomatoBar")
+        if (try? FileManager.default.createDirectory(at: iCloudDir, withIntermediateDirectories: true)) != nil,
+           FileManager.default.isWritableFile(atPath: iCloudDir.path) {
+            return iCloudDir
+        }
+        let docs = FileManager.default.urls(for: .documentDirectory, in: .userDomainMask)[0]
+            .appendingPathComponent("TomatoBar")
+        try? FileManager.default.createDirectory(at: docs, withIntermediateDirectories: true)
+        return docs
+    }
+
+    /// One-time migration from the old sandbox container path.
+    private static func migrateLegacyDataIfNeeded(to newURL: URL) {
+        guard !FileManager.default.fileExists(atPath: newURL.path) else { return }
+        let legacy = URL(fileURLWithPath: NSHomeDirectory())
+            .appendingPathComponent("Library/Containers/com.github.ivoronin.TomatoBar/Data/Documents/tracking.json")
+        guard FileManager.default.fileExists(atPath: legacy.path) else { return }
+        try? FileManager.default.copyItem(at: legacy, to: newURL)
     }
 
     // MARK: - Persistence
