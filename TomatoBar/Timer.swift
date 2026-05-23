@@ -42,7 +42,7 @@ class TBTimer: ObservableObject {
     @AppStorage("showTimerInMenuBar") var showTimerInMenuBar = true
     @AppStorage("currentPreset") var currentPreset = 0
     @AppStorage("timerPresets") var presets = Array(repeating: TimerPreset(), count: 4)
-    @AppStorage("showFullScreenMask") var showFullScreenMask = false
+    @AppStorage("showFullScreenMask") var showFullScreenMask = true
     @AppStorage("toggleDoNotDisturb") var toggleDoNotDisturb = false {
         didSet {
             let state = toggleDoNotDisturb && stateMachine.state == .work && !paused
@@ -53,6 +53,11 @@ class TBTimer: ObservableObject {
     }
     // This preference is "hidden"
     @AppStorage("overrunTimeLimit") var overrunTimeLimit = -60.0
+    @AppStorage("currentProjectIdStr") var currentProjectIdStr: String = ""
+    @AppStorage("currentAreaIdStr") var currentAreaIdStr: String = ""
+
+    var currentProjectId: UUID? { UUID(uuidString: currentProjectIdStr) }
+    var currentAreaId: UUID? { UUID(uuidString: currentAreaIdStr) }
 
     public let player = TBPlayer()
     public var currentWorkInterval: Int = 0
@@ -70,10 +75,17 @@ class TBTimer: ObservableObject {
     private var timerFormatter = DateComponentsFormatter()
     private var pausedTimeRemaining: TimeInterval = 0
     private var pausedPrevImage: NSImage?
+    private var sessionStartTime: Date?
+    private var sessionPlannedDuration: TimeInterval = 0
+    private var accumulatedActiveDuration: TimeInterval = 0
+    private var lastResumeTime: Date?
+    private var sessionProjectId: UUID?
+    private var sessionAreaId: UUID?
     @Published var paused: Bool = false
     @Published var timeLeftString: String = ""
     @Published var timer: DispatchSourceTimer?
     @Published var stateMachine = TBStateMachine(state: .idle)
+    @Published var lastCompletedSessionId: UUID?
 
     init() {
         /*
@@ -214,6 +226,10 @@ class TBTimer: ObservableObject {
         }
 
         if paused {
+            if let last = lastResumeTime {
+                accumulatedActiveDuration += Date().timeIntervalSince(last)
+                lastResumeTime = nil
+            }
             if stateMachine.state == .work {
                 player.stopTicking()
             }
@@ -223,6 +239,7 @@ class TBTimer: ObservableObject {
             finishTime = Date.distantFuture
         }
         else {
+            lastResumeTime = Date()
             if stateMachine.state == .work {
                 player.startTicking(isPaused: true)
             }
@@ -346,14 +363,47 @@ class TBTimer: ObservableObject {
                 }
             }
         }
+        sessionStartTime = Date()
+        sessionPlannedDuration = TimeInterval(currentPresetInstance.workIntervalLength * 60)
+        accumulatedActiveDuration = 0
+        lastResumeTime = Date()
+        sessionProjectId = currentProjectId
+        sessionAreaId = currentAreaId
+        lastCompletedSessionId = nil
     }
 
-    private func onWorkEnd(context _: TBStateMachine.Context) {
+    private func onWorkEnd(context ctx: TBStateMachine.Context) {
         player.stopTicking()
         player.playDing()
         DispatchQueue.main.async(group: notificationGroup) {
             _ = DoNotDisturbHelper.shared.set(state: false)
         }
+        guard let start = sessionStartTime else { return }
+        var actual = accumulatedActiveDuration
+        if let last = lastResumeTime {
+            actual += Date().timeIntervalSince(last)
+        }
+        let completed = ctx.event == .timerFired
+        let session = TBSession(
+            id: UUID(),
+            projectId: sessionProjectId,
+            areaId: sessionAreaId,
+            startedAt: start,
+            endedAt: Date(),
+            plannedDuration: sessionPlannedDuration,
+            actualDuration: actual,
+            type: .work,
+            completed: completed,
+            notes: nil
+        )
+        TrackingStore.shared.appendSession(session)
+        lastCompletedSessionId = session.id
+        if completed, !showFullScreenMask {
+            DispatchQueue.main.async {
+                TBStatusItem.shared.showPopover(nil)
+            }
+        }
+        sessionStartTime = nil
     }
 
     private func onRestStart(context ctx: TBStateMachine.Context) {
@@ -366,7 +416,10 @@ class TBTimer: ObservableObject {
             imgName = .longRest
         }
         if showFullScreenMask {
-            MaskHelper.shared.showMaskWindow(desc: body) { [self] in
+            let maskTitle = lastCompletedSessionId != nil
+                ? NSLocalizedString("TBMask.noteQuestion.title", comment: "Accomplishment prompt")
+                : body
+            MaskHelper.shared.showMaskWindow(desc: maskTitle, sessionId: lastCompletedSessionId) { [self] in
                 onNotificationAction(action: .skipRest)
             }
         } else if ctx.event == .timerFired {
@@ -380,10 +433,17 @@ class TBTimer: ObservableObject {
         }
         TBStatusItem.shared.setIcon(name: imgName)
         startTimer(seconds: length * 60)
+        sessionStartTime = Date()
+        sessionPlannedDuration = TimeInterval(length * 60)
+        accumulatedActiveDuration = 0
+        lastResumeTime = Date()
+        sessionProjectId = currentProjectId
+        sessionAreaId = currentAreaId
     }
 
     private func onRestEnd(context ctx: TBStateMachine.Context) {
         MaskHelper.shared.hideMaskWindow()
+        recordRestSession(completed: ctx.event != .skipEvent)
         if ctx.event == .skipEvent {
             return
         }
@@ -396,15 +456,40 @@ class TBTimer: ObservableObject {
         }
     }
 
+    private func recordRestSession(completed: Bool) {
+        guard let start = sessionStartTime else { return }
+        var actual = accumulatedActiveDuration
+        if let last = lastResumeTime {
+            actual += Date().timeIntervalSince(last)
+        }
+        TrackingStore.shared.appendSession(TBSession(
+            id: UUID(),
+            projectId: sessionProjectId,
+            areaId: sessionAreaId,
+            startedAt: start,
+            endedAt: Date(),
+            plannedDuration: sessionPlannedDuration,
+            actualDuration: actual,
+            type: .rest,
+            completed: completed,
+            notes: nil
+        ))
+        sessionStartTime = nil
+    }
+
     private func onIdleEnd(context _: TBStateMachine.Context) {
         player.initPlayers()
     }
 
-    private func onIdleStart(context _: TBStateMachine.Context) {
+    private func onIdleStart(context ctx: TBStateMachine.Context) {
+        if ctx.fromState == .rest {
+            recordRestSession(completed: ctx.event == .timerFired)
+        }
         player.deinitPlayers()
         stopTimer()
         MaskHelper.shared.hideMaskWindow()
         TBStatusItem.shared.setIcon(name: .idle)
         currentWorkInterval = 0
+        lastCompletedSessionId = nil
     }
 }

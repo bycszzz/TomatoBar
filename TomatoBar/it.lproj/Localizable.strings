@@ -46,3 +46,8 @@
 "TBTimer.onRestFinish.title" = "Pausa finita";
 "TBTimer.onRestFinish.body" = "Metticela tutta!";
 "TBMask.skip.label" = "Fai doppio click da qualche parte per saltare, clicca una volta per ripristinare il display";
+
+"TBMask.noteQuestion.title" = "What did you just accomplish?";
+"TBMask.notePlaceholder" = "Write a sentence…";
+"TBMask.noteSaveHint" = "↵ to save";
+"TBMask.savedFeedback" = "✓ Saved";

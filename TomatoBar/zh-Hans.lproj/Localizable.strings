@@ -46,3 +46,8 @@
 "TBTimer.onRestFinish.title" = "休息结束";
 "TBTimer.onRestFinish.body" = "继续努力!";
 "TBMask.skip.label" = "双击任意区域跳过，或单击一次恢复屏幕到正常状态";
+
+"TBMask.noteQuestion.title" = "刚刚完成了什么？";
+"TBMask.notePlaceholder" = "写一句话…";
+"TBMask.noteSaveHint" = "↵ 保存";
+"TBMask.savedFeedback" = "✓ 已保存";

@@ -9,6 +9,15 @@ extension KeyboardShortcuts.Name {
     static let addMinuteTimer = Self("addMinuteTimer")
 }
 
+private let buildStamp: String = {
+    guard let exePath = Bundle.main.executablePath,
+          let attrs = try? FileManager.default.attributesOfItem(atPath: exePath),
+          let date = attrs[.modificationDate] as? Date else { return "?" }
+    let f = DateFormatter()
+    f.dateFormat = "MM-dd HH:mm:ss"
+    return f.string(from: date)
+}()
+
 private struct IntervalsView: View {
     @EnvironmentObject var timer: TBTimer
     private func ClampedNumberFormatter(min: Int, max: Int) -> NumberFormatter {
@@ -283,14 +292,61 @@ private struct SoundsView: View {
     }
 }
 
+private struct SessionNoteInput: View {
+    @ObservedObject var timer: TBTimer
+    @State private var note: String = ""
+    @FocusState private var focused: Bool
+
+    var body: some View {
+        HStack(spacing: 6) {
+            Text("🍅").font(.caption)
+            TextField("What did you accomplish?", text: $note)
+                .textFieldStyle(.plain)
+                .font(.callout)
+                .focused($focused)
+                .onSubmit(save)
+            if !note.trimmingCharacters(in: .whitespaces).isEmpty {
+                Button(action: save) {
+                    Image(systemName: "checkmark.circle.fill")
+                        .foregroundColor(.accentColor)
+                }
+                .buttonStyle(.plain)
+            }
+            Button { timer.lastCompletedSessionId = nil } label: {
+                Image(systemName: "xmark.circle")
+                    .foregroundColor(.secondary)
+            }
+            .buttonStyle(.plain)
+        }
+        .padding(.horizontal, 8)
+        .padding(.vertical, 6)
+        .background(Color.accentColor.opacity(0.1))
+        .cornerRadius(8)
+        .onAppear { focused = true }
+    }
+
+    private func save() {
+        guard let sid = timer.lastCompletedSessionId else { return }
+        let trimmed = note.trimmingCharacters(in: .whitespaces)
+        if !trimmed.isEmpty {
+            TrackingStore.shared.updateSessionNotes(id: sid, notes: trimmed)
+        }
+        timer.lastCompletedSessionId = nil
+    }
+}
+
 private enum ChildView {
     case intervals, settings, sounds
 }
 
 struct TBPopoverView: View {
-    @ObservedObject var timer = TBTimer()
+    @ObservedObject var timer: TBTimer
     @State private var buttonHovered = false
     @State private var activeChildView = ChildView.intervals
+
+    init(timer: TBTimer) {
+        _timer = ObservedObject(wrappedValue: timer)
+    }
 
     private func GetLocalizedWidth() -> CGFloat {
         let widthString = NSLocalizedString("TBPopoverView.width", comment: "Width for the view")
@@ -372,7 +428,13 @@ struct TBPopoverView: View {
                     .disabled(timer.timer == nil)
                 }
             }
-            
+
+            ProjectPicker().environmentObject(timer)
+
+            if timer.lastCompletedSessionId != nil {
+                SessionNoteInput(timer: timer)
+            }
+
             Picker("", selection: $activeChildView) {
                 Text(NSLocalizedString("TBPopoverView.intervals.label",
                                        comment: "Intervals label")).tag(ChildView.intervals)
@@ -398,6 +460,16 @@ struct TBPopoverView: View {
 
             Group {
                 Button {
+                    TBStatusItem.shared.closePopover(nil)
+                    TBStatusItem.shared.openDashboard()
+                } label: {
+                    Text("Dashboard")
+                    Spacer()
+                    Text("⌘ D").foregroundColor(Color.gray)
+                }
+                .buttonStyle(.plain)
+                .keyboardShortcut("d")
+                Button {
                     NSApp.activate(ignoringOtherApps: true)
                     NSApp.orderFrontStandardAboutPanel()
                 } label: {
@@ -418,6 +490,14 @@ struct TBPopoverView: View {
                 }
                 .buttonStyle(.plain)
                 .keyboardShortcut("q")
+            }
+
+            HStack {
+                Spacer()
+                Text("build \(buildStamp)")
+                    .font(.system(size: 10).monospacedDigit())
+                    .foregroundColor(.orange)
+                Spacer()
             }
         }
         .frame(width: GetLocalizedWidth())

@@ -28,11 +28,21 @@ struct TBApp: App {
 
 class TBStatusItem: NSObject, NSApplicationDelegate {
     private var popover = NSPopover()
+    private var dashboardWindow: NSWindow?
+    private var timerInstance: TBTimer?
     var statusBarItem: NSStatusItem?
     static var shared: TBStatusItem!
 
     func applicationDidFinishLaunching(_: Notification) {
-        let view = TBPopoverView()
+        // Force-enable full-screen mask on first launch after this update
+        if !UserDefaults.standard.bool(forKey: "maskDefaultMigrated") {
+            UserDefaults.standard.set(true, forKey: "showFullScreenMask")
+            UserDefaults.standard.set(true, forKey: "maskDefaultMigrated")
+        }
+
+        let timer = TBTimer()
+        timerInstance = timer
+        let view = TBPopoverView(timer: timer)
 
         popover.behavior = .transient
         popover.contentViewController = NSViewController()
@@ -48,11 +58,12 @@ class TBStatusItem: NSObject, NSApplicationDelegate {
         statusBarItem?.button?.imagePosition = .imageLeft
         setIcon(name: .idle)
         statusBarItem?.button?.action = #selector(TBStatusItem.togglePopover(_:))
-        view.timer.startOnLaunch()
+        timer.startOnLaunch()
     }
 
     func applicationWillTerminate(_: Notification) {
         _ = DoNotDisturbHelper.shared.set(state: false)
+        TrackingStore.shared.flush()
     }
 
     func setTitle(title: String?) {
@@ -92,5 +103,27 @@ class TBStatusItem: NSObject, NSApplicationDelegate {
         } else {
             showPopover(sender)
         }
+    }
+
+    func openDashboard() {
+        if let win = dashboardWindow, win.isVisible {
+            NSApp.activate(ignoringOtherApps: true)
+            win.makeKeyAndOrderFront(nil)
+            return
+        }
+        let win = NSWindow(
+            contentRect: NSRect(x: 0, y: 0, width: 820, height: 460),
+            styleMask: [.titled, .closable, .resizable, .miniaturizable],
+            backing: .buffered,
+            defer: false
+        )
+        win.title = "Dashboard"
+        win.contentView = NSHostingView(rootView: DashboardWindow())
+        win.isReleasedWhenClosed = false
+        win.center()
+        dashboardWindow = win
+        NSApp.setActivationPolicy(.regular)
+        NSApp.activate(ignoringOtherApps: true)
+        win.makeKeyAndOrderFront(nil)
     }
 }

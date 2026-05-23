@@ -46,3 +46,8 @@
 "TBTimer.onRestFinish.title" = "Pausa encerrada";
 "TBTimer.onRestFinish.body" = "Continue com o bom trabalho!";
 "TBMask.skip.label" = "Clique duplo em qualquer área para pular, clique uma vez para ocultar esta máscara";
+
+"TBMask.noteQuestion.title" = "What did you just accomplish?";
+"TBMask.notePlaceholder" = "Write a sentence…";
+"TBMask.noteSaveHint" = "↵ to save";
+"TBMask.savedFeedback" = "✓ Saved";

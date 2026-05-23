@@ -7,6 +7,13 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		133CF5E040114C558192FDD5 /* Models.swift in Sources */ = {isa = PBXBuildFile; fileRef = D5619D4F94D24A1D844C9DCD /* Models.swift */; };
+		1835F53DD17845CE9845860B /* Aggregations.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8E78748B995E459DAF3C03E2 /* Aggregations.swift */; };
+		3482D2808EE84A668801B2A3 /* ProjectPicker.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1BF2859F818744FFB5237EB5 /* ProjectPicker.swift */; };
+		E5F1A2B3C4D5E6F7A8B90001 /* ProjectRetroView.swift in Sources */ = {isa = PBXBuildFile; fileRef = E5F1A2B3C4D5E6F7A8B90002 /* ProjectRetroView.swift */; };
+		57E6DA8867BA481C96B3E2AC /* HeatmapView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 248B7F69ABBF4A1AA0F13680 /* HeatmapView.swift */; };
+		71FB1315485F48A1ABBA0602 /* DashboardWindow.swift in Sources */ = {isa = PBXBuildFile; fileRef = A86A7145F7794683BC0E05F5 /* DashboardWindow.swift */; };
+		7C251A5E691A437EB7BCDE02 /* TrackingStore.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6D660D164721402D85151EE0 /* TrackingStore.swift */; };
 		8A21B78C27EE31A20009E5DB /* App.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8A21B78B27EE31A20009E5DB /* App.swift */; };
 		8A21B78E27EE31A20009E5DB /* View.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8A21B78D27EE31A20009E5DB /* View.swift */; };
 		8A21B79027EE31A30009E5DB /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 8A21B78F27EE31A30009E5DB /* Assets.xcassets */; };
@@ -25,7 +32,10 @@
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
+		1BF2859F818744FFB5237EB5 /* ProjectPicker.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ProjectPicker.swift; sourceTree = "<group>"; };
+		248B7F69ABBF4A1AA0F13680 /* HeatmapView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = HeatmapView.swift; sourceTree = "<group>"; };
 		489CFFB02DBBE0B70052D63E /* pt-BR */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = "pt-BR"; path = "pt-BR.lproj/Localizable.strings"; sourceTree = "<group>"; };
+		6D660D164721402D85151EE0 /* TrackingStore.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TrackingStore.swift; sourceTree = "<group>"; };
 		8A21B78827EE31A20009E5DB /* TomatoBar.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = TomatoBar.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		8A21B78B27EE31A20009E5DB /* App.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = App.swift; sourceTree = "<group>"; };
 		8A21B78D27EE31A20009E5DB /* View.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = View.swift; sourceTree = "<group>"; };
@@ -37,7 +47,10 @@
 		8AA54346293094AB002A47FC /* en */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = en; path = en.lproj/Localizable.strings; sourceTree = "<group>"; };
 		8AA5B3F12812A74600BE1A6C /* Notifications.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Notifications.swift; sourceTree = "<group>"; };
 		8AEE49AE2AA75A5E00243D2F /* Log.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Log.swift; sourceTree = "<group>"; };
+		8E78748B995E459DAF3C03E2 /* Aggregations.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Aggregations.swift; sourceTree = "<group>"; };
 		9EB9405B2B07605900198AD2 /* MaskView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MaskView.swift; sourceTree = "<group>"; };
+		A86A7145F7794683BC0E05F5 /* DashboardWindow.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DashboardWindow.swift; sourceTree = "<group>"; };
+		E5F1A2B3C4D5E6F7A8B90002 /* ProjectRetroView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ProjectRetroView.swift; sourceTree = "<group>"; };
 		C4C8DE0E2930DBB4003B1110 /* zh-Hans */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = "zh-Hans"; path = "zh-Hans.lproj/Localizable.strings"; sourceTree = "<group>"; };
 		D043345B2C9C5E4B0004984D /* it */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = it; path = it.lproj/Localizable.strings; sourceTree = "<group>"; };
 		D05258222C76B6B7005093E3 /* DND.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = DND.swift; sourceTree = "<group>"; };
@@ -45,6 +58,7 @@
 		D0557C922CB6D9C400833516 /* fr */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = fr; path = fr.lproj/Localizable.strings; sourceTree = "<group>"; };
 		D07E612C2CA774ED0022B476 /* de */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = de; path = de.lproj/Localizable.strings; sourceTree = "<group>"; };
 		D0BEE8052C9C17CA00714D40 /* ja */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = ja; path = ja.lproj/Localizable.strings; sourceTree = "<group>"; };
+		D5619D4F94D24A1D844C9DCD /* Models.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Models.swift; sourceTree = "<group>"; };
 		E47308B82D8C9C1C005981C6 /* el */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = el; path = el.lproj/Localizable.strings; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
@@ -92,6 +106,13 @@
 				8A9F701827EE3DAF0012A1EC /* Timer.swift */,
 				8A9F701E27EE536D0012A1EC /* Player.swift */,
 				8AA5B3F12812A74600BE1A6C /* Notifications.swift */,
+				D5619D4F94D24A1D844C9DCD /* Models.swift */,
+				6D660D164721402D85151EE0 /* TrackingStore.swift */,
+				8E78748B995E459DAF3C03E2 /* Aggregations.swift */,
+				1BF2859F818744FFB5237EB5 /* ProjectPicker.swift */,
+				A86A7145F7794683BC0E05F5 /* DashboardWindow.swift */,
+				248B7F69ABBF4A1AA0F13680 /* HeatmapView.swift */,
+				E5F1A2B3C4D5E6F7A8B90002 /* ProjectRetroView.swift */,
 				8A21B78F27EE31A30009E5DB /* Assets.xcassets */,
 				8A21B79427EE31A30009E5DB /* TomatoBar.entitlements */,
 				8AA54347293094AB002A47FC /* Localizable.strings */,
@@ -226,6 +247,13 @@
 				8A21B78C27EE31A20009E5DB /* App.swift in Sources */,
 				8AA5B3F22812A74600BE1A6C /* Notifications.swift in Sources */,
 				8A9F700927EE396E0012A1EC /* State.swift in Sources */,
+				133CF5E040114C558192FDD5 /* Models.swift in Sources */,
+				7C251A5E691A437EB7BCDE02 /* TrackingStore.swift in Sources */,
+				1835F53DD17845CE9845860B /* Aggregations.swift in Sources */,
+				3482D2808EE84A668801B2A3 /* ProjectPicker.swift in Sources */,
+				71FB1315485F48A1ABBA0602 /* DashboardWindow.swift in Sources */,
+				57E6DA8867BA481C96B3E2AC /* HeatmapView.swift in Sources */,
+				E5F1A2B3C4D5E6F7A8B90001 /* ProjectRetroView.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -303,7 +331,7 @@
 				GCC_WARN_UNINITIALIZED_AUTOS = YES_AGGRESSIVE;
 				GCC_WARN_UNUSED_FUNCTION = YES;
 				GCC_WARN_UNUSED_VARIABLE = YES;
-				MACOSX_DEPLOYMENT_TARGET = 12.3;
+				MACOSX_DEPLOYMENT_TARGET = 14.0;
 				MTL_ENABLE_DEBUG_INFO = INCLUDE_SOURCE;
 				MTL_FAST_MATH = YES;
 				ONLY_ACTIVE_ARCH = YES;
@@ -360,7 +388,7 @@
 				GCC_WARN_UNINITIALIZED_AUTOS = YES_AGGRESSIVE;
 				GCC_WARN_UNUSED_FUNCTION = YES;
 				GCC_WARN_UNUSED_VARIABLE = YES;
-				MACOSX_DEPLOYMENT_TARGET = 12.3;
+				MACOSX_DEPLOYMENT_TARGET = 14.0;
 				MTL_ENABLE_DEBUG_INFO = NO;
 				MTL_FAST_MATH = YES;
 				SDKROOT = macosx;
@@ -381,7 +409,7 @@
 				COMBINE_HIDPI_IMAGES = YES;
 				CURRENT_PROJECT_VERSION = 25;
 				DEAD_CODE_STRIPPING = YES;
-				DEVELOPMENT_TEAM = LUZK6JBS9B;
+				DEVELOPMENT_TEAM = 92YQ68BA6L;
 				ENABLE_HARDENED_RUNTIME = YES;
 				GENERATE_INFOPLIST_FILE = YES;
 				INFOPLIST_FILE = TomatoBar/Info.plist;
@@ -393,7 +421,7 @@
 					"$(inherited)",
 					"@executable_path/../Frameworks",
 				);
-				MACOSX_DEPLOYMENT_TARGET = 12.0;
+				MACOSX_DEPLOYMENT_TARGET = 14.0;
 				MARKETING_VERSION = "3.5.0-fork";
 				PRODUCT_BUNDLE_IDENTIFIER = com.github.ivoronin.TomatoBar;
 				PRODUCT_NAME = "$(TARGET_NAME)";
@@ -419,7 +447,7 @@
 				COMBINE_HIDPI_IMAGES = YES;
 				CURRENT_PROJECT_VERSION = 25;
 				DEAD_CODE_STRIPPING = YES;
-				DEVELOPMENT_TEAM = LUZK6JBS9B;
+				DEVELOPMENT_TEAM = 92YQ68BA6L;
 				ENABLE_HARDENED_RUNTIME = YES;
 				GENERATE_INFOPLIST_FILE = YES;
 				INFOPLIST_FILE = TomatoBar/Info.plist;
@@ -431,7 +459,7 @@
 					"$(inherited)",
 					"@executable_path/../Frameworks",
 				);
-				MACOSX_DEPLOYMENT_TARGET = 12.0;
+				MACOSX_DEPLOYMENT_TARGET = 14.0;
 				MARKETING_VERSION = "3.5.0-fork";
 				PRODUCT_BUNDLE_IDENTIFIER = com.github.ivoronin.TomatoBar;
 				PRODUCT_NAME = "$(TARGET_NAME)";

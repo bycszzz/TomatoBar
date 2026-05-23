@@ -46,3 +46,8 @@
 "TBTimer.onRestFinish.title" = "La pause est terminée";
 "TBTimer.onRestFinish.body" = "Tenez bon !";
 "TBMask.skip.label" = "Double-cliquer n'importe où pour passer, ou cliquer une fois pour rétablir l'écran";
+
+"TBMask.noteQuestion.title" = "What did you just accomplish?";
+"TBMask.notePlaceholder" = "Write a sentence…";
+"TBMask.noteSaveHint" = "↵ to save";
+"TBMask.savedFeedback" = "✓ Saved";
